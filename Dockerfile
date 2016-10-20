@@ -1,4 +1,4 @@
-FROM centos:6
+FROM centos:latest
 MAINTAINER Ernesto Celis <ernesto@tic.uno>
 
 COPY src /
@@ -12,3 +12,4 @@ RUN yum -y install epel-release ; \
   chmod a+x /build.sh
 
 WORKDIR /home/builder
+USER builder
