@@ -1,0 +1,61 @@
+--- nginx.spec.org	2016-08-29 02:59:10.377394430 +0000
++++ nginx.spec	2016-08-29 03:12:49.000000000 +0000
+@@ -61,7 +61,7 @@
+ # end of distribution specific definitions
+ 
+ %define main_version                 1.10.1
+-%define main_release                 1%{?dist}.ngx
++%define main_release                 TIC1%{?dist}.ngx
+ %define module_xslt_version          %{main_version}
+ %define module_xslt_release          1%{?dist}.ngx
+ %define module_geoip_version         %{main_version}
+@@ -73,6 +73,7 @@
+ %define module_njs_shaid             1c50334fbea6
+ %define module_njs_version           %{main_version}.0.0.20160414.%{module_njs_shaid}
+ %define module_njs_release           1%{?dist}.ngx
++%define nhm_version 		     0.31
+ 
+ %define bdir %{_builddir}/%{name}-%{main_version}
+ 
+@@ -112,6 +113,7 @@
+         --with-http_geoip_module=dynamic \
+         --with-http_perl_module=dynamic \
+         --add-dynamic-module=njs-%{module_njs_shaid}/nginx \
++        --add-module=headers-more-nginx-module-%{nhm_version} \
+         --with-threads \
+         --with-stream \
+         --with-stream_ssl_module \
+@@ -126,6 +128,7 @@
+ Name: nginx
+ Version: %{main_version}
+ Release: %{main_release}
++Packager: Tecno Informatica Coproceso S.C.
+ Vendor: Nginx, Inc.
+ URL: http://nginx.org/
+ Group: %{_group}
+@@ -143,6 +146,7 @@
+ Source11: nginx-debug.service
+ Source12: COPYRIGHT
+ Source13: njs-%{module_njs_shaid}.tar.gz
++Source14: https://github.com/openresty/headers-more-nginx-module/archive/v%{nhm_version}.tar.gz
+ 
+ License: 2-clause BSD-like license
+ 
+@@ -211,6 +215,7 @@
+ %prep
+ %setup -q
+ tar xvzf %SOURCE13
++tar xvzf %SOURCE14
+ cp %{SOURCE2} .
+ sed -e 's|%%DEFAULTSTART%%|2 3 4 5|g' -e 's|%%DEFAULTSTOP%%|0 1 6|g' \
+     -e 's|%%PROVIDES%%|nginx|g' < %{SOURCE2} > nginx.init
+@@ -560,6 +565,9 @@
+ fi
+ 
+ %changelog
++* Sun Aug 28 2016 Ernesto Celis <ernesto@tic.uno>
++- headers more module 0.31
++
+ * Tue May 31 2016 Konstantin Pavlov <thresh@nginx.com>
+ - 1.10.1
+ 
