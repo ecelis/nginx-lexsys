@@ -1,0 +1,71 @@
+--- nginx.spec.orig	2016-10-20 07:54:55.036508072 +0000
++++ nginx.spec	2016-10-20 08:15:24.570518958 +0000
+@@ -61,18 +61,19 @@
+ # end of distribution specific definitions
+ 
+ %define main_version                 1.10.1
+-%define main_release                 1%{?dist}.ngx
++%define main_release                 TIC1%{?dist}.ngx
+ %define module_xslt_version          %{main_version}
+-%define module_xslt_release          1%{?dist}.ngx
++%define module_xslt_release          TIC1%{?dist}.ngx
+ %define module_geoip_version         %{main_version}
+-%define module_geoip_release         1%{?dist}.ngx
++%define module_geoip_release         TIC1%{?dist}.ngx
+ %define module_image_filter_version  %{main_version}
+-%define module_image_filter_release  1%{?dist}.ngx
++%define module_image_filter_release  TIC1%{?dist}.ngx
+ %define module_perl_version          %{main_version}
+-%define module_perl_release          1%{?dist}.ngx
++%define module_perl_release          TIC1%{?dist}.ngx
+ %define module_njs_shaid             1c50334fbea6
+ %define module_njs_version           %{main_version}.0.0.20160414.%{module_njs_shaid}
+-%define module_njs_release           1%{?dist}.ngx
++%define module_njs_release           TIC1%{?dist}.ngx
++%define hmn_version		     0.31
+ 
+ %define bdir %{_builddir}/%{name}-%{main_version}
+ 
+@@ -111,6 +112,7 @@
+         --with-http_image_filter_module=dynamic \
+         --with-http_geoip_module=dynamic \
+         --with-http_perl_module=dynamic \
++	--add-module=headers-more-nginx-module-%{hmn_version} \
+         --add-dynamic-module=njs-%{module_njs_shaid}/nginx \
+         --with-threads \
+         --with-stream \
+@@ -129,6 +131,7 @@
+ Vendor: Nginx, Inc.
+ URL: http://nginx.org/
+ Group: %{_group}
++Packager: Tecno Informatica Coproceso S.C.
+ 
+ Source0: http://nginx.org/download/%{name}-%{version}.tar.gz
+ Source1: logrotate
+@@ -143,6 +146,7 @@
+ Source11: nginx-debug.service
+ Source12: COPYRIGHT
+ Source13: njs-%{module_njs_shaid}.tar.gz
++Source14: https://github.com/openresty/headers-more-nginx-module/archive/v%{hmn_version}.tar.gz
+ 
+ License: 2-clause BSD-like license
+ 
+@@ -211,6 +215,7 @@
+ %prep
+ %setup -q
+ tar xvzf %SOURCE13
++tar xvzf %SOURCE14
+ cp %{SOURCE2} .
+ sed -e 's|%%DEFAULTSTART%%|2 3 4 5|g' -e 's|%%DEFAULTSTOP%%|0 1 6|g' \
+     -e 's|%%PROVIDES%%|nginx|g' < %{SOURCE2} > nginx.init
+@@ -560,6 +565,10 @@
+ fi
+ 
+ %changelog
++* Thu Oct 20 2016 Ernesto Celis <ernesto@tic.uno>
++- 1.10.1
++- Added headers-more-nginx-module v0.31
++
+ * Tue May 31 2016 Konstantin Pavlov <thresh@nginx.com>
+ - 1.10.1
+ 
